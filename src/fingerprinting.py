@@ -39,7 +39,7 @@ class FingerPrint(torch.Tensor):
         
         
 
-class fingerPrintBuilder:
+class FingerPrintBuilder:
     
     """A class which builds a fingerprint for audio. uses a model to extract FingerPrints and stores them in a DataSet."""
     
@@ -97,14 +97,14 @@ class fingerPrintBuilder:
             return db
         
 
-class audioIdentification:
+class AudioIdentification:
     
     """a callable class that when called with path_to_queryset, path_to_fingerprints, returns the top k matches for each query in the query set
     The query set is a folder containing audio files"""
     
     def __init__(self, model = None, checkpoint = DEFAULT_CHECKPOINT, feat_extract_head = 0, overlap = 0.5, quantize_q = 100):
         
-        self.builder = fingerPrintBuilder(model = model, checkpoint = checkpoint, feat_extract_head = feat_extract_head, overlap = overlap, quantize_q = quantize_q)
+        self.builder = FingerPrintBuilder(model = model, checkpoint = checkpoint, feat_extract_head = feat_extract_head, overlap = overlap, quantize_q = quantize_q)
         
     def __call__(self, path_to_queryset, path_to_fingerprints, path_to_output, k = 3, return_ = False, save = True):
         
@@ -146,4 +146,13 @@ class audioIdentification:
         
         if return_:
             return top_k_matches
-        
+
+# wrap both above class intanciations and calls within two methods fingerPrintBuilder and audioIdentification
+
+def fingerprintBuilder(path_to_database, path_to_fingerprints, model = None, checkpoint = DEFAULT_CHECKPOINT, feat_extract_head = 0, overlap = 0.5, quantize_q = 100, return_ = False, save = True):
+    builder = FingerPrintBuilder(model = model, checkpoint = checkpoint, feat_extract_head = feat_extract_head, overlap = overlap, quantize_q = quantize_q)
+    return builder(path_to_database, path_to_fingerprints, return_ = return_, save = save)
+
+def audioIdentification(path_to_queryset, path_to_fingerprints, path_to_output, model = None, checkpoint = DEFAULT_CHECKPOINT, feat_extract_head = 0, overlap = 0.5, quantize_q = 100, k = 3, return_ = False, save = True):
+    identification = AudioIdentification(model = model, checkpoint = checkpoint, feat_extract_head = feat_extract_head, overlap = overlap, quantize_q = quantize_q)
+    return identification(path_to_queryset, path_to_fingerprints, path_to_output, k = k, return_ = return_, save = save)

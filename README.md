@@ -24,12 +24,10 @@ I recommend these be installed in a blank virtual environment.
 All required files should be in the repo to run the audio fingerprinting algorithm, including config and model checkpoints. the audio fingerprinter can be instanciated and run with the following commands:
 
     from fingerprinting.fingerprinting import fingerPrintBuilder, audioIdentification
-    builder = fingerPrintBuilder()
-    builder(path_to_database, path_to_fingerprints)
-    matcher = audioIdentification()
-    matcher(path_to_fingerprints,path_to_queryset_path_to_output)
+    builder = fingerPrintBuilder(path_to_database,path_to_fingerprints)
+    matcher = audioIdentification(path_to_fingerprints, path_to_queryset, path_to_output)
 
-by default, these classes load a default checkpoint provided in the file. it is possible to change the encoder and checkpoint by specifying the ```model``` and ```checkpoint``` parameters at instanciation (these should be identical for both classes).
+by default, these methods load a default checkpoint provided in the file. it is possible to change the encoder and checkpoint by specifying the ```model``` and ```checkpoint``` parameters at instanciation (these should be identical for both classes).
 
 In order, these commands run the fingerprinting algorithm on the database and save the fingerprints to the provided path. Then, the matcher builds the fingerprints for the query_set and matches against the precomputed fingerprints. 
 
